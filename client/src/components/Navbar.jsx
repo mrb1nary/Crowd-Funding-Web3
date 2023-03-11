@@ -51,6 +51,76 @@ function Navbar() {
           </div>
         </Link>
       </div>
+      {/*Small screen navigation*/}
+
+      <div className="sm:hidden flex justify-between items-center relative">
+        <div className="flex justify-center items-center h-[40px] w-[40px] bg-[#2c2f32] rounded-[10px] cursor-pointer">
+          <img
+            src={thirdweb}
+            alt="profile"
+            className="w-[60%] h-[60%] object-contain"
+          />
+        </div>
+        <div className="flex justify-center items-center h-[40px] w-[40px] bg-[#2c2f32] rounded-[10px] cursor-pointer ml-6">
+          <img
+            src={menu}
+            alt="menu"
+            className="w-[34px] h-[34px] object-contain cursor-pointer"
+            onClick={() => setToggleDrawer(!toggleDrawer)}
+          />
+
+          <div
+            className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${!toggleDrawer ? '-translate-y-[100vh]' : 'translate-y-0'} transition-all duration-700`}
+          >
+            <ul className="mb-4">
+              {navlinks.map((link) => (
+                <li
+                  key={link.name}
+                  className={`${
+                    isActive === link.id ? "bg-[#3a3a43] rounded-[10px]" : ""
+                  } px-4 py-2 cursor-pointer hover:bg-[#3a3a43] rounded-[10px]`}
+                  onClick={() => {
+                    setIsActive(link.id);
+                    setToggleDrawer(false);
+                    navigate(link.link);
+                  }}
+                >
+                  <img
+                    src={link.imgUrl}
+                    alt={link.name}
+                    className={`w-[24px] h-[24px] object-contain ${
+                      isActive === link.name ? "grayscale-0" : "grayscale"
+                    }`}
+                  />
+                  <p
+                    className={`ml-[20px] font-semibold text-[14px] ${
+                      isActive === link.name
+                        ? "text-[#1dc071]"
+                        : "text-[#808191]"
+                    }`}
+                  >
+                    {link.name}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <div className="flex mx-4">
+              <CustomButton
+                btnType="button"
+                title={address == "" ? "Connect" : "Create a campaign"}
+                styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
+                handleClick={() => {
+                  if (address) {
+                    navigate("/create-campaign");
+                  } else {
+                    navigate("/connect");
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
