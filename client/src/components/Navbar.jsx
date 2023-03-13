@@ -4,13 +4,14 @@ import { CustomButton } from "./";
 import { logo, menu, search, thirdweb } from "../assets";
 import { navlinks } from "../constants";
 import { useState } from "react";
+import { useStateContext } from "../context";
 
 function Navbar() {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState("dashboard");
 
   const [toggleDrawer, setToggleDrawer] = useState(false);
-  const address = "";
+  const { connect, address } = useStateContext();
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
@@ -37,7 +38,7 @@ function Navbar() {
             if (address) {
               navigate("/create-campaign");
             } else {
-              navigate("/connect");
+              connect();
             }
           }}
         />
@@ -56,7 +57,7 @@ function Navbar() {
       <div className="sm:hidden flex justify-between items-center relative">
         <div className="flex justify-center items-center h-[40px] w-[40px] bg-[#2c2f32] rounded-[10px] cursor-pointer">
           <img
-            src={thirdweb}
+            src={logo}
             alt="profile"
             className="w-[60%] h-[60%] object-contain"
           />
@@ -70,7 +71,9 @@ function Navbar() {
           />
 
           <div
-            className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${!toggleDrawer ? '-translate-y-[100vh]' : 'translate-y-0'} transition-all duration-700`}
+            className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${
+              !toggleDrawer ? "-translate-y-[100vh]" : "translate-y-0"
+            } transition-all duration-700`}
           >
             <ul className="mb-4">
               {navlinks.map((link) => (
@@ -107,13 +110,13 @@ function Navbar() {
             <div className="flex mx-4">
               <CustomButton
                 btnType="button"
-                title={address == "" ? "Connect" : "Create a campaign"}
+                title={!address ? "Connect" : "Create a campaign"}
                 styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
                 handleClick={() => {
                   if (address) {
                     navigate("/create-campaign");
                   } else {
-                    navigate("/connect");
+                    connect();
                   }
                 }}
               />

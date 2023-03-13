@@ -6,19 +6,12 @@ import { FormField } from "../components";
 import { money } from "../assets";
 import { CustomButton } from "../components";
 import { checkIfImage } from "../utils";
+import { useStateContext } from "../context";
 
 function CreateCampaign() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(form);
-  };
-
-  const formChangeHandler = (formField, e) => {
-    setForm({ ...form, [formField]: e.target.value });
-  };
-
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { createCampaign } = useStateContext();
   const [form, setForm] = useState({
     name: "",
     title: "",
@@ -27,6 +20,29 @@ function CreateCampaign() {
     deadline: "",
     image: "",
   });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    checkIfImage(form.image, async (exists) => {
+      if (exists) {
+        setIsLoading(true);
+        await createCampaign({
+          ...form,
+          target: ethers.utils.parseUnits(form.target, 18),
+        });
+        setIsLoading(false);
+        navigate("/");
+      } else {
+        alert("Provide valid image URL");
+        setForm({ ...form, image: "" });
+      }
+    });
+  };
+
+  const formChangeHandler = (formField, e) => {
+    setForm({ ...form, [formField]: e.target.value });
+  };
 
   return (
     <div className="bg-[#1c1c24] flex flex-col justify-center items-center rounded-[10px] sm:p-10 p-4">
