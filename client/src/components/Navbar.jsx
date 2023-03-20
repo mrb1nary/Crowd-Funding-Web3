@@ -32,7 +32,7 @@ function Navbar() {
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <CustomButton
           btnType="button"
-          title={address == "" ? "Connect" : "Create a campaign"}
+          title={address ? "Create a campaign" : "Connect"}
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
             if (address) {
@@ -110,7 +110,7 @@ function Navbar() {
             <div className="flex mx-4">
               <CustomButton
                 btnType="button"
-                title={!address ? "Connect" : "Create a campaign"}
+                title={address ? "Create a campaign" : "Connect"}
                 styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
                 handleClick={() => {
                   if (address) {
