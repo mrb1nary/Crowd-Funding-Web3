@@ -10,7 +10,7 @@ import { ethers } from "ethers";
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
-  const { contract, isLoading } = useContract(
+  const { contract } = useContract(
     "0xDdb539b6852fA48fA91327E982dDda6F2796B470"
   );
   const { mutateAsync: createCampaign } = useContractWrite(
@@ -38,9 +38,39 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
+  const getCampaigns = async () => {
+    try {
+      const campaigns = await contract.call("getCampaigns");
+
+      const parsedCampaings = campaigns.map((campaign, i) => ({
+        owner: campaign.owner,
+        title: campaign.title,
+        description: campaign.description,
+        target: ethers.utils.formatEther(campaign.target.toString()),
+        deadline: campaign.deadline.toNumber(),
+        amountCollected: ethers.utils.formatEther(
+          campaign.amountCollected.toString()
+        ),
+        image: campaign.image,
+        pId: i,
+      }));
+
+      return parsedCampaings;
+      
+    } catch (error) {
+      console.log("Failure", error);
+    }
+  };
+
   return (
     <StateContext.Provider
-      value={{ createCampaign: publishCampaign, address, connect }}
+      value={{
+        createCampaign: publishCampaign,
+        address,
+        connect,
+        getCampaigns,
+        contract,
+      }}
     >
       {children}
     </StateContext.Provider>
