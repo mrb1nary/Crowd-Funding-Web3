@@ -62,6 +62,18 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
+  const getUserCampaigns = async () => {
+    try {
+      const allCampaigns = await getCampaigns();
+      const filteredCampaigns = allCampaigns.filter((campaign)=> campaign.owner === address);
+
+      return filteredCampaigns;
+    } catch (error) {
+      console.log("Failure", error);
+    }
+  };
+
+
   return (
     <StateContext.Provider
       value={{
@@ -70,6 +82,7 @@ export const StateContextProvider = ({ children }) => {
         connect,
         getCampaigns,
         contract,
+        getUserCampaigns
       }}
     >
       {children}
